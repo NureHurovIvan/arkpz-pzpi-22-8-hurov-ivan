@@ -1,1 +1,129 @@
+//Метод 1: Extract Class (Виділити Клас)
+//Код до рефакторингу
+public class Order {
+    private List<Item> items;
+    private double totalPrice;
+
+    public void calculateTotalPrice() {
+        // обчислення загальної суми
+    }
+
+    public void printOrder() {
+        // виводи замовлення
+    }
+
+    public void saveOrder() {
+        // збереження замовлення
+    }
+}
+
+//Код після рефакторингу
+public class Order {
+    private List<Item> items;
+    private Pricing pricing;
+    private OrderSaver saver;
+
+    public Order() {
+        this.pricing = new Pricing(this);
+        this.saver = new OrderSaver(this);
+    }
+}
+
+public class Pricing {
+    private Order order;
+
+    public Pricing(Order order) {
+        this.order = order;
+    }
+
+    public void calculateTotalPrice() {
+        // обчислення загальної суми
+    }
+}
+
+public class OrderSaver {
+    private Order order;
+
+    public OrderSaver(Order order) {
+        this.order = order;
+    }
+
+    public void saveOrder() {
+        // збереження замовлення
+    }
+}
+
+//Метод 2: Introduce Null Object (Ввести Null-Об'єкт)
+//Код до рефакторингу
+public class Customer {
+    private Address address;
+
+    public void sendInvoice() {
+        if (address != null) {
+            address.send();
+        } else {
+            System.out.println("Адреса не вказана.");
+        }
+    }
+}
+
+//Код після рефакторингу
+public class Customer {
+    private Address address;
+
+    public Customer() {
+        this.address = new NullAddress(); // Встановлення Null-об’єкта за замовчуванням
+    }
+
+    public void sendInvoice() {
+        address.send();
+    }
+}
+
+public abstract class Address {
+    public abstract void send();
+}
+
+public class RealAddress extends Address {
+    @Override
+    public void send() {
+        // Логіка відправлення за реальною адресою
+    }
+}
+
+public class NullAddress extends Address {
+    @Override
+    public void send() {
+        // Нічого не робить, "нульова" операція
+    }
+}
+
+//Метод 3: Extract Interface (Виділити Інтерфейс)
+//Код до рефакторингу
+public class PaymentService {
+    public void processPayment(CreditCard card) {
+    }
+}
+
+public class CreditCard {
+    public void pay() {
+    }
+}
+
+//Код після рефакторингу
+public interface PaymentMethod {
+    void processPayment();
+}
+
+public class CreditCard implements PaymentMethod {
+    @Override
+    public void processPayment() {
+    }
+}
+
+public class PaymentService {
+    public void processPayment(PaymentMethod method) {
+        method.processPayment();
+    }
+}
 
