@@ -46,12 +46,12 @@ exports.loginUser = async (req, res) => {
   try {
       const user = await User.findOne({ email });
       if (!user) {
-          return res.status(400).json({ message: 'Неверный email или пароль' });
+          return res.status(400).json({ message: 'Invalid email or password' });
       }
 
       const isMatch = await bcrypt.compare(password, user.password_hash);
       if (!isMatch) {
-          return res.status(400).json({ message: 'Неверный email или пароль' });
+          return res.status(400).json({ message: 'Invalid email or password' });
       }
 
       const token = jwt.sign(
@@ -60,17 +60,16 @@ exports.loginUser = async (req, res) => {
           { expiresIn: '1h' }
       );
 
-      // Устанавливаем токен в httpOnly cookie
       res.cookie('token', token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === 'production', // Использовать secure только в продакшене
+          secure: process.env.NODE_ENV === 'production',
           sameSite: 'strict',
-          maxAge: 3600000, // 1 час
+          maxAge: 7200000, // 2h
       });
 
-      res.json({ message: 'Успешный вход', user: { email: user.email, role: user.role } });
+      res.json({ message: 'Successful login', user: { email: user.email, role: user.role } });
   } catch (error) {
-      res.status(500).json({ message: 'Ошибка сервера', error: error.message });
+      res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
@@ -81,7 +80,7 @@ exports.logoutUser = (req, res) => {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
   });
-  res.json({ message: 'Вы успешно вышли из системы' });
+  res.json({ message: 'You have successfully logged out' });
 };
 
 // Delete user

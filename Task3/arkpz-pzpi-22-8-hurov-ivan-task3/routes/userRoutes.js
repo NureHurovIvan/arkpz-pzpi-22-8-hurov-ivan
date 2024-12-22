@@ -3,6 +3,8 @@ const router = express.Router();
 const { getAllUsers, registerUser, loginUser, deleteUser } = require('../controllers/userController');
 const { addVehicle, deleteVehicle } = require('../controllers/vehicleController');
 const { addMaintenance } = require('../controllers/maintenanceController');
+const { logoutUser } = require('../controllers/userController');
+const { authenticate } = require('../middleware/authMiddleware');
 
 // User routes
 router.get('/users', getAllUsers);
