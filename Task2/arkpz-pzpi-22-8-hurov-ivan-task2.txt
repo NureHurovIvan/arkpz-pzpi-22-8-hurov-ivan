@@ -1,1 +1,322 @@
+МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+
+Кафедра «Програмної інженерії»
+
+
+
+
+
+
+ЗВІТ
+З Лабораторної роботи № 2 з дисципліни
+«Аналіз та рефакторинг коду»
+
+
+
+
+
+
+
+
+
+Виконав
+ст. гр. ПЗПІ-22-8
+Гуров Іван	Перевірив ст. викладач каф. ПІ
+Сокорчук І. П.
+
+
+
+
+
+
+
+
+Харків 2024
+ 
+1	Вступ
+1.1	Тема
+
+Розробка бази даних для серверної частини програмної системи та прикладного програмного інтерфейсу (АРІ).
+
+1.2	Мета
+
+Розробити базу даних для серверної частини програмної системи та прикладного програмного інтерфейсу.
+
+2	 Розробка діаграм
+2.1 Розробка UML діаграми прецедентів для серверної частини системи
+
+Для акторів UML діаграми було обрано дві ролі: звичайного користувача (User) та адміністратора (Admin). Для прецедентів обрано наступні сценарії: реєстрація, авторизація, пошук баз знань, діалог з іншими користувачами, створення, редагування, видалення та винесення баз знань у вебдовідник, а також управління доступом до баз знань.
+На основі цього було розроблено UML діаграму прецедентів для серверної частини системи (див. рис. 2.1).
+
+ 
+Рис. 2.1 – UML діаграма прецедентів
+ 
+2.2	 Розробка ER діаграми даних
+
+
+Для проєктування бази даних було визначено основні сутності: користувачі (Users), сенсори (Sensors), автомобілі (Vehicles), обслуговування (Maintenance) та повідомлення (Notifications). На основі цих сутностей було розроблено ER діаграму, яка демонструє взаємозв'язки між таблицями (див. рис. 2.2).
+
+ 
+Рис. 2.2 – ER діаграма даних
+
+
+3	Розробка бази даних
+3.1 Розроблення бази даних програмної системи
+
+Для розробки бази даних програмної системи використовується система керування базами даних MongoDB, яка є документно-орієнтованою NoSQL базою даних. Вона дозволяє ефективно працювати з великими обсягами даних, зокрема для збору і зберігання інформації про транспортні засоби, сенсори, технічне обслуговування та сповіщення користувачів.
+Для створення схем та моделей даних у базі даних була використана бібліотека Mongoose, яка забезпечує зручний інтерфейс для взаємодії з MongoDB.
+Код наведений у додатку А.
+
+3.2	 Розробка діаграми структури бази даних
+
+
+Після створення бази даних, була розроблена діаграма структури бази даних (див. рис. 3.1).
+ 
+Рис. 3.1 – діаграма структури бази даних
+ 
+4	Розробка серверної частини
+4.2	Розробка функцій для роботи з базою даних
+
+Розробка функцій для роботи з базою даних є критичним етапом створення серверної частини системи, що забезпечує взаємодію між API і базою даних. Для цього було створено функції, які реалізують CRUD-операції (створення, читання, оновлення, видалення)
+Для роботи з базою даних були розроблені функції наведені у додатку Б.
+
+4.3	Створення програмної реалізації розробленого АРІ
+Розроблений API забезпечує зв'язок між клієнтською та серверною частинами системи. Реалізація базується на використанні REST-підходу, який дозволяє організувати просту та ефективну взаємодію через HTTP-запити.
+Користувачі (Users):
+•	POST /api/register – реєстрація нового користувача.
+•	POST /api/login – авторизація користувача та отримання токена.
+•	GET /api/users – отримання списку всіх користувачів (тільки для адміністратора).
+•	DELETE /api/users/:id – видалення користувача.
+Автомобілі (Vehicles):
+•	POST /api/vehicles – додавання нового автомобіля.
+•	DELETE /api/vehicles/:id – видалення автомобіля.
+•	GET /api/vehicles – отримання списку автомобілів користувача.
+Обслуговування (Maintenance):
+•	POST /api/maintenance – додавання запису про технічне обслуговування.
+•	GET /api/maintenance/:vehicle_id – отримання історії обслуговування автомобіля.
+Сповіщення (Notifications):
+•	POST /api/notifications – створення нового сповіщення.
+•	GET /api/notifications – отримання всіх сповіщень для користувача.
+
+Тепер використовуючи створене АРІ було розроблено програмну реалізацію (див. рис. 4.1).
+
+ 
+Рис. 4.1 – програмна реалізація для АРІ
+
+
+5	Висновок
+У процесі виконання роботи було успішно створено UML-діаграму прецедентів і ER-діаграму даних, які забезпечили структуроване розуміння функціональних вимог системи та взаємозв’язків між основними сутностями бази даних. На основі розроблених діаграм було спроєктовано та реалізовано базу даних для серверної частини системи з використанням MongoDB і бібліотеки Mongoose, що забезпечує зручний інтерфейс для взаємодії з даними.
+Крім того, було створено функції для роботи з базою даних, які охоплюють основні операції, такі як додавання, редагування та видалення даних. Для забезпечення взаємодії клієнтів із серверною частиною було розроблено програмний інтерфейс (API), який дозволяє виконувати операції через HTTP-запити. Реалізоване API відповідає сучасним вимогам щодо зручності, масштабованості та функціональності.
+
+Посилання на відео: https://youtu.be/jICTsWgvKoc
+ 
+Додаток А
+
+
+1	const mongoose = require('mongoose');
+2	
+3	const userSchema = new mongoose.Schema({
+4	name: { type: String, required: true },
+5	email: { type: String, required: true, unique: true },
+6	password_hash: { type: String, required: true },
+7	role: { type: String, default: 'user' },
+8	});
+9	
+10	module.exports = mongoose.model('User', userSchema);
+11	
+12	const vehicleSchema = new mongoose.Schema({
+13	user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+14	make: { type: String, required: true },
+15	model: { type: String, required: true },
+16	year: { type: Number, required: true },
+17	vin_number: { type: String, required: true },
+18	});
+19	
+20	module.exports = mongoose.model('Vehicle', vehicleSchema);
+21	
+22	const sensorSchema = new mongoose.Schema({
+23	vehicle_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle', required: true },
+24	type: { type: String, required: true },
+25	value: { type: String, required: true },
+26	timestamp: { type: Date, default: Date.now },
+27	});
+28	
+29	module.exports = mongoose.model('Sensor', sensorSchema);
+30	
+31	const maintenanceSchema = new mongoose.Schema({
+32	vehicle_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle', required: true },
+33	maintenance_type: { type: String, required: true },
+34	maintenance_date: { type: Date, required: true },
+35	mileage: { type: Number, required: true },
+36	comments: { type: String, required: false },
+37	});
+38	
+39	module.exports = mongoose.model('Maintenance', maintenanceSchema);
+40	
+41	const notificationSchema = new mongoose.Schema({
+42	user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+43	vehicle_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle', required: true },
+44	notification_type: { type: String, required: true },
+45	message: { type: String, required: true },
+46	timestamp: { type: Date, default: Date.now },
+47	status: { type: String, default: 'unread' },
+48	});
+49	
+50	module.exports = mongoose.model('Notification', notificationSchema);
+ 
+Додаток Б
+
+
+1	const bcrypt = require('bcrypt');
+2	const User = require('../models/user');
+3	const jwt = require('jsonwebtoken');
+4	
+5	exports.getAllUsers = async (req, res) => {
+6	try {
+7	const users = await User.find();
+8	res.json(users);
+9	} catch (error) {
+10	res.status(500).json({ message: 'Server error' });
+11	}
+12	};
+13	
+14	exports.registerUser = async (req, res) => {
+15	const { name, email, password, role } = req.body;
+16	
+17	try {
+18	const existingUser = await User.findOne({ email });
+19	if (existingUser) {
+20	return res.status(400).json({ message: 'A user with this email already exists' });
+21	}
+22	
+23	const salt = await bcrypt.genSalt(10);
+24	const password_hash = await bcrypt.hash(password, salt);
+25	
+26	// Create a new user
+27	const user = new User({
+28	name,
+29	email,
+30	password_hash,
+31	role: role || 'user',
+32	});
+33	
+34	await user.save();
+35	res.status(201).json({ message: 'User successfully registered' });
+36	} catch (error) {
+37	res.status(500).json({ message: 'Server error', error: error.message });
+38	}
+39	};
+40	
+41	exports.loginUser = async (req, res) => {
+42	const { email, password } = req.body;
+43	
+44	try {
+45	const user = await User.findOne({ email });
+46	if (!user) {
+47	return res.status(400).json({ message: 'Invalid email or password' });
+48	}
+49	
+50	const isMatch = await bcrypt.compare(password, user.password_hash);
+51	if (!isMatch) {
+52	return res.status(400).json({ message: 'Invalid email or password' });
+53	}
+54	
+55	const token = jwt.sign(
+56	{ user_id: user._id, email: user.email, role: user.role },
+57	process.env.JWT_SECRET,
+58	{ expiresIn: '1h' }
+59	);
+60	
+61	res.json({ message: 'Successful login', token });
+62	} catch (error) {
+63	res.status(500).json({ message: 'Server error', error: error.message });
+64	}
+65	};
+66	
+67	// Delete user
+68	exports.deleteUser = async (req, res) => {
+69	const { user_id } = req.params;
+70	
+71	try {
+72	const user = await User.findByIdAndDelete(user_id);
+73	if (!user) {
+74	return res.status(404).json({ message: 'User not found' });
+75	}
+76	res.status(200).json({ message: 'User deleted successfully' });
+77	} catch (error) {
+78	res.status(500).json({ message: 'Server error', error: error.message });
+79	}
+80	};
+81	
+82	const mongoose = require('mongoose');
+83	const Vehicle = require('../models/vehicle');
+84	
+85	// Add new vehicle
+86	exports.addVehicle = async (req, res) => {
+87	const { user_id, make, model, year, vin_number } = req.body;
+88	
+89	try {
+90	// Checking user_id format for correctness
+91	if (!mongoose.Types.ObjectId.isValid(user_id)) {
+92	return res.status(400).json({ message: 'Invalid user_id format' });
+93	}
+94	
+95	const userObjectId = new mongoose.Types.ObjectId(user_id);
+96	
+97	// Creating a new car
+98	const vehicle = new Vehicle({
+99	user_id: userObjectId,
+100	make,
+101	model,
+102	year,
+103	vin_number,
+104	});
+105	
+106	await vehicle.save();
+107	
+108	res.status(201).json({ message: 'Vehicle added successfully' });
+109	} catch (error) {
+110	console.error('Error adding vehicle:', error.message);
+111	res.status(400).json({ message: 'Error adding vehicle', error: error.message });
+112	}
+113	};
+114	
+115	// Delete vehicle by ID
+116	exports.deleteVehicle = async (req, res) => {
+117	const { vehicle_id } = req.params;
+
+118	try {
+119	const vehicle = await Vehicle.findByIdAndDelete(vehicle_id);
+120	if (!vehicle) {
+121	return res.status(404).json({ message: 'Vehicle not found' });
+122	}
+123	res.status(200).json({ message: 'Vehicle deleted successfully' });
+124	} catch (error) {
+125	res.status(500).json({ message: 'Error deleting vehicle', error: error.message });
+126	}
+127	};
+128	
+129	const express = require('express');
+130	const router = express.Router();
+131	const { getAllUsers, registerUser, loginUser, deleteUser } =
+132	require('../controllers/userController');
+133	const { addVehicle, deleteVehicle } = require('../controllers/vehicleController');
+134	const { addMaintenance } = require('../controllers/maintenanceController');
+135	
+136	// User routes
+137	router.get('/users', getAllUsers);
+138	router.post('/register', registerUser);
+139	router.post('/login', loginUser);
+140	router.delete('/users/:user_id', deleteUser);
+141	
+142	// Vehicles routes
+143	router.post('/vehicles', addVehicle); 
+144	router.delete('/vehicles/:vehicle_id', deleteVehicle);
+145	
+146	// maintenance routes
+147	router.post('/maintenance', addMaintenance); 
+148	
+149	module.exports = router;
+
+
 
