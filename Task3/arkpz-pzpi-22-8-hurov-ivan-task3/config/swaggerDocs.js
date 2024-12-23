@@ -1,63 +1,34 @@
 /**
- * @swagger
- * /users:
- *   get:
- *     summary: Get all users
- *     tags: [Users]
- *     responses:
- *       200:
- *         description: List of all users
- *       500:
- *         description: Server error
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     User:
- *       type: object
- *       required:
- *         - name
- *         - email
- *         - password
- *       properties:
- *         name:
- *           type: string
- *           description: User's name
- *         email:
- *           type: string
- *           description: User's email
- *         password:
- *           type: string
- *           description: User's password
- *         role:
- *           type: string
- *           description: User's role
- *       example:
- *         name: John Doe
- *         email: john@example.com
- *         password: password123
- *         role: user
+ * Swagger Annotations for API Endpoints
  */
 
 /**
  * @swagger
  * /register:
  *   post:
- *     summary: User registration
- *     tags: [Users]
+ *     summary: Register a new user or admin
+ *     tags: [Authentication]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [user, admin]
  *     responses:
  *       201:
- *         description: User successfully registered
+ *         description: User registered successfully
  *       400:
- *         description: A user with this email already exists
+ *         description: Validation error
  *       500:
  *         description: Server error
  */
@@ -66,30 +37,22 @@
  * @swagger
  * /login:
  *   post:
- *     summary: User authentication
- *     tags: [Users]
+ *     summary: Log in a user or admin
+ *     tags: [Authentication]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - email
- *               - password
  *             properties:
  *               email:
  *                 type: string
- *                 description: User's email
  *               password:
  *                 type: string
- *                 description: User's password
- *             example:
- *               email: john@example.com
- *               password: password123
  *     responses:
  *       200:
- *         description: Successful login
+ *         description: Login successful
  *       400:
  *         description: Invalid email or password
  *       500:
@@ -98,20 +61,47 @@
 
 /**
  * @swagger
- * /users/{user_id}:
- *   delete:
- *     summary: Delete user by ID
- *     tags: [Users]
+ * /users:
+ *   get:
+ *     summary: Get all users (admin only)
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: List of users
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /users/{user_id}/role:
+ *   put:
+ *     summary: Update user role (admin only)
+ *     tags: [Admin]
  *     parameters:
  *       - in: path
  *         name: user_id
- *         required: true
  *         schema:
  *           type: string
+ *         required: true
  *         description: User ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 enum: [user, admin]
  *     responses:
  *       200:
- *         description: User deleted successfully
+ *         description: Role updated successfully
+ *       400:
+ *         description: Invalid role
  *       404:
  *         description: User not found
  *       500:
@@ -120,113 +110,34 @@
 
 /**
  * @swagger
- * components:
- *   schemas:
- *     Vehicle:
- *       type: object
- *       required:
- *         - user_id
- *         - make
- *         - model
- *         - year
- *         - vin_number
- *       properties:
- *         user_id:
- *           type: string
- *           description: User ID who owns the vehicle
- *         make:
- *           type: string
- *           description: Car make
- *         model:
- *           type: string
- *           description: Car model
- *         year:
- *           type: integer
- *           description: Year of manufacture
- *         vin_number:
- *           type: string
- *           description: Vehicle Identification Number
- *       example:
- *         user_id: "60d1c7f5f68a6c7d0cd4e6f5"
- *         make: Toyota
- *         model: Camry
- *         year: 2022
- *         vin_number: "1HGBH41JXMN109186"
- */
-
-/**
- * @swagger
  * /vehicles:
  *   post:
- *     summary: Add a new vehicle
+ *     summary: Add a vehicle
  *     tags: [Vehicles]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Vehicle'
+ *             type: object
+ *             properties:
+ *               user_id:
+ *                 type: string
+ *               make:
+ *                 type: string
+ *               model:
+ *                 type: string
+ *               year:
+ *                 type: integer
+ *               vin_number:
+ *                 type: string
  *     responses:
  *       201:
- *         description: Vehicle successfully added
+ *         description: Vehicle added successfully
  *       400:
- *         description: Error while adding the vehicle
+ *         description: Validation error
  *       500:
  *         description: Server error
- */
-
-/**
- * @swagger
- * /vehicles/{vehicle_id}:
- *   delete:
- *     summary: Delete vehicle by ID
- *     tags: [Vehicles]
- *     parameters:
- *       - in: path
- *         name: vehicle_id
- *         required: true
- *         schema:
- *           type: string
- *         description: Vehicle ID
- *     responses:
- *       200:
- *         description: Vehicle successfully deleted
- *       404:
- *         description: Vehicle not found
- *       500:
- *         description: Server error
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Maintenance:
- *       type: object
- *       required:
- *         - vehicle_id
- *         - maintenance_type
- *         - maintenance_date
- *         - mileage
- *       properties:
- *         vehicle_id:
- *           type: string
- *           description: Vehicle ID
- *         maintenance_type:
- *           type: string
- *           description: Type of maintenance
- *         maintenance_date:
- *           type: string
- *           format: date
- *           description: Date of maintenance
- *         mileage:
- *           type: integer
- *           description: Mileage of the vehicle at the time of maintenance
- *       example:
- *         vehicle_id: "60d1c7f5f68a6c7d0cd4e6f5"
- *         maintenance_type: "Oil Change"
- *         maintenance_date: "2024-12-20"
- *         mileage: 15000
  */
 
 /**
@@ -240,12 +151,82 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Maintenance'
+ *             type: object
+ *             properties:
+ *               vehicle_id:
+ *                 type: string
+ *               maintenance_type:
+ *                 type: string
+ *               maintenance_date:
+ *                 type: string
+ *               mileage:
+ *                 type: integer
+ *               comments:
+ *                 type: string
  *     responses:
  *       201:
- *         description: Maintenance record successfully added
+ *         description: Maintenance record added successfully
  *       400:
- *         description: Error while adding the record
+ *         description: Validation error
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /stats:
+ *   get:
+ *     summary: Get system statistics (admin only)
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: System statistics
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /vehicles/{vehicle_id}:
+ *   delete:
+ *     summary: Delete a vehicle
+ *     tags: [Vehicles]
+ *     parameters:
+ *       - in: path
+ *         name: vehicle_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Vehicle ID
+ *     responses:
+ *       200:
+ *         description: Vehicle deleted successfully
+ *       404:
+ *         description: Vehicle not found
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /users/{user_id}:
+ *   delete:
+ *     summary: Delete a user (admin only)
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       404:
+ *         description: User not found
  *       500:
  *         description: Server error
  */
