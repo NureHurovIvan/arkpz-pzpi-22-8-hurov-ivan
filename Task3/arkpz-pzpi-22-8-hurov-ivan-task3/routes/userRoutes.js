@@ -1,26 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const { getAllUsers, registerUser, loginUser, deleteUser } = require('../controllers/userController');
-const { addVehicle, deleteVehicle } = require('../controllers/vehicleController');
-const { addMaintenance } = require('../controllers/maintenanceController');
-const { logoutUser } = require('../controllers/userController');
+const userController = require('../controllers/userController');
+const vehicleController = require('../controllers/vehicleController');
+const maintenanceController = require('../controllers/maintenanceController');
 const { authenticate } = require('../middleware/authMiddleware');
+const { authorize } = require('../middleware/roleMiddleware');
 
-// User routes
-router.get('/users', getAllUsers);
-router.post('/register', registerUser);
-router.post('/login', loginUser);
-router.delete('/users/:user_id', deleteUser);
-router.post('/logout', logoutUser);
-router.get('/protected', authenticate, (req, res) => {
-    res.json({ message: 'Access allowed', user: req.user });
-});
+// Public routes
+router.post('/register', userController.registerUser);
+router.post('/login', userController.loginUser);
+router.post('/logout', authenticate, userController.logoutUser);
 
-// Vehicles routes
-router.post('/vehicles', addVehicle); 
-router.delete('/vehicles/:vehicle_id', deleteVehicle);
+// Protected user routes
+router.get('/vehicles', authenticate, userController.getUserVehicles);
+router.post('/vehicles', authenticate, vehicleController.addVehicle);
+router.delete('/vehicles/:vehicle_id', authenticate, vehicleController.deleteVehicle);
+router.post('/maintenance', authenticate, maintenanceController.addMaintenance);
 
-// maintenance routes
-router.post('/maintenance', addMaintenance); 
+// Admin routes
+router.get('/users', authenticate, authorize(['admin']), userController.getAllUsers);
+router.delete('/users/:user_id', authenticate, authorize(['admin']), userController.deleteUser);
+router.put('/users/:user_id/role', authenticate, authorize(['admin']), userController.updateUserRole);
+router.get('/stats', authenticate, authorize(['admin']), userController.getSystemStats);
 
 module.exports = router;
