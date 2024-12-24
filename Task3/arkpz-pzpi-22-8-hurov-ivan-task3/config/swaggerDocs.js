@@ -61,6 +61,27 @@
 
 /**
  * @swagger
+ * /logout:
+ *   post:
+ *     summary: Logout user
+ *     description: Clears the authentication cookie and logs out the user.
+ *     tags:
+ *       - Authentication
+ *     responses:
+ *       200:
+ *         description: Successfully logged out.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Logged out successfully
+ */
+
+/**
+ * @swagger
  * /users:
  *   get:
  *     summary: Get all users (admin only)
