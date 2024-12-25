@@ -1,3 +1,4 @@
+// models/Vehicle.js
 const mongoose = require('mongoose');
 
 const vehicleSchema = new mongoose.Schema({
@@ -6,6 +7,9 @@ const vehicleSchema = new mongoose.Schema({
   model: { type: String, required: true },
   year: { type: Number, required: true },
   vin_number: { type: String, required: true },
+  tirePressure: { type: Number, default: null },
+  batteryVoltage: { type: Number, default: null },
+  brakePadThickness: { type: Number, default: null }
 });
 
 module.exports = mongoose.model('Vehicle', vehicleSchema);

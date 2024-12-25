@@ -1,14 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-// Модуль для работы с базой данных (например, MongoDB)
 const IoTData = require('../models/IoTData');
 
-// POST-запрос для получения данных с IoT устройства
 router.post('/iot-data', async (req, res) => {
   const { tirePressure, batteryVoltage, brakePadThickness } = req.body;
 
-  // Сохранение данных в базе данных
   try {
     const newData = new IoTData({
       tirePressure,
