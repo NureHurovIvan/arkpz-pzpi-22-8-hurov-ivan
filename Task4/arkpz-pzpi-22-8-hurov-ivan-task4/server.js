@@ -6,7 +6,7 @@ const userRoutes = require('./routes/userRoutes');
 const swaggerDocs = require('./config/swagger');
 const bodyParser = require('body-parser');
 const iotRoutes = require('./routes/iotRoutes');
-const mqtt = require('mqtt'); // Подключаем MQTT
+const mqtt = require('mqtt');
 
 dotenv.config();
 connectDB();
@@ -21,26 +21,39 @@ app.use('/api', iotRoutes);
 // Swagger
 swaggerDocs(app);
 
-// MQTT настройка
-const client = mqtt.connect('mqtt://broker.hivemq.com'); // Используйте свой брокер, если нужно
+// MQTT
+const client = mqtt.connect('mqtt://broker.hivemq.com');
 const topic = 'autocare/iot';
 
-client.on('connect', () => {
-  console.log('Подключено к MQTT брокеру');
-  client.subscribe(topic, (err) => {
-    if (!err) {
-      console.log(`Подписка на тему: ${topic}`);
-    } else {
-      console.log('Ошибка подписки на тему: ' + err);
+const { checkAndCreateMaintenance } = require('./utils/maintenanceUtils');
+
+client.on('message', async (topic, message) => {
+  const payload = JSON.parse(message.toString());
+  console.log(`Retrieved data from topic ${topic}: ${JSON.stringify(payload)}`);
+
+  const { vin, tirePressure, batteryVoltage, brakePadThickness } = payload;
+
+  try {
+    const vehicle = await Vehicle.findOne({ vin_number: vin });
+
+    if (!vehicle) {
+      console.log(`Vehicle with VIN ${vin} not found`);
+      return;
     }
-  });
+
+    vehicle.tirePressure = tirePressure;
+    vehicle.batteryVoltage = batteryVoltage;
+    vehicle.brakePadThickness = brakePadThickness;
+    await vehicle.save();
+
+    console.log(`Vehicle state updated for VIN ${vin}`);
+
+    await checkAndCreateMaintenance(vehicle);
+  } catch (error) {
+    console.error('Error processing MQTT data:', error);
+  }
 });
 
-client.on('message', (topic, message) => {
-  const payload = message.toString();
-  console.log(`Получены данные с темы ${topic}: ${payload}`);
-  // Здесь можно обработать полученные данные, например, сохранить в базу данных
-});
 
 // Swagger
 swaggerDocs(app);
