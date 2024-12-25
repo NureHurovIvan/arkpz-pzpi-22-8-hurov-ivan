@@ -1,19 +1,16 @@
 const mongoose = require('mongoose');
 const Vehicle = require('../models/vehicle');
 
-// Add new vehicle
 exports.addVehicle = async (req, res) => {
   const { user_id, make, model, year, vin_number } = req.body;
 
   try {
-    // Checking user_id format for correctness
     if (!mongoose.Types.ObjectId.isValid(user_id)) {
       return res.status(400).json({ message: 'Invalid user_id format' });
     }
 
     const userObjectId = new mongoose.Types.ObjectId(user_id);
 
-    // Creating a new car
     const vehicle = new Vehicle({
       user_id: userObjectId,
       make,
@@ -31,7 +28,6 @@ exports.addVehicle = async (req, res) => {
   }
 };
 
-// Delete vehicle by ID
 exports.deleteVehicle = async (req, res) => {
   const { vehicle_id } = req.params;
 
@@ -43,5 +39,14 @@ exports.deleteVehicle = async (req, res) => {
     res.status(200).json({ message: 'Vehicle deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting vehicle', error: error.message });
+  }
+};
+
+exports.getAllVehicles = async (req, res) => {
+  try {
+    const vehicles = await Vehicle.find();
+    res.status(200).json(vehicles);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching vehicles', error });
   }
 };

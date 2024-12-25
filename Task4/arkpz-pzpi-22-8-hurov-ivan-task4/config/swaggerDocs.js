@@ -97,6 +97,47 @@
 
 /**
  * @swagger
+ * /vehicles:
+ *   get:
+ *     summary: Get all vehicles (admin only)
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: List of all vehicles
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   user_id:
+ *                     type: string
+ *                   make:
+ *                     type: string
+ *                   model:
+ *                     type: string
+ *                   year:
+ *                     type: integer
+ *                   vin_number:
+ *                     type: string
+ *                   tirePressure:
+ *                     type: number
+ *                   batteryVoltage:
+ *                     type: number
+ *                   brakePadThickness:
+ *                     type: number
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Server error
+ */
+
+
+/**
+ * @swagger
  * /users/{user_id}/role:
  *   put:
  *     summary: Update user role (admin only)
