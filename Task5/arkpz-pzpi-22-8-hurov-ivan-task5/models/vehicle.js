@@ -1,4 +1,4 @@
-// models/Vehicle.js
+// models/vehicle.js
 const mongoose = require('mongoose');
 
 const vehicleSchema = new mongoose.Schema({

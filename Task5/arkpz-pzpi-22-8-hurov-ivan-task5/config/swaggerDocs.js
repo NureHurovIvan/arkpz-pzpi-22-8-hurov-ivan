@@ -273,6 +273,27 @@
 
 /**
  * @swagger
+ * /my-vehicles:
+ *   get:
+ *     summary: Get user's vehicles
+ *     description: Retrieve a list of vehicles belonging to the authenticated user.
+ *     tags: [Vehicles]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved user's vehicles
+ *       404:
+ *         description: No vehicles found for the user
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
+
+
+/**
+ * @swagger
  * /users/{user_id}:
  *   delete:
  *     summary: Delete a user (admin only)

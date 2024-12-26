@@ -1,11 +1,7 @@
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const connectDB = require('./config/database');
-const userRoutes = require('./routes/userRoutes');
 const swaggerDocs = require('./config/swagger');
-const bodyParser = require('body-parser');
-const iotRoutes = require('./routes/iotRoutes');
 const mqtt = require('mqtt');
 const Vehicle = require('./models/vehicle');
 
@@ -14,10 +10,21 @@ connectDB();
 
 const app = express();
 app.use(express.json());
+
+const cookieParser = require('cookie-parser');
 app.use(cookieParser());
+
+const userRoutes = require('./routes/userRoutes');
 app.use('/api', userRoutes);
+
+const bodyParser = require('body-parser');
 app.use(bodyParser.json());
+
+const iotRoutes = require('./routes/iotRoutes');
 app.use('/api', iotRoutes); 
+
+const vehicleRoutes = require('./routes/vehicleRoutes');
+app.use('/api', vehicleRoutes); // Базовый путь '/api'
 
 // Swagger
 swaggerDocs(app);

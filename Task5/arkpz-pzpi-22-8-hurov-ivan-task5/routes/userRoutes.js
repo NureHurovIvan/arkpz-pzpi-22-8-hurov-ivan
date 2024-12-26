@@ -12,7 +12,6 @@ router.post('/login', userController.loginUser);
 router.post('/logout', authenticate, userController.logoutUser);
 
 // Protected user routes
-router.get('/vehicles', authenticate, userController.getUserVehicles);
 router.post('/vehicles', authenticate, vehicleController.addVehicle);
 router.delete('/vehicles/:vehicle_id', authenticate, vehicleController.deleteVehicle);
 router.post('/maintenance', authenticate, maintenanceController.addMaintenance);

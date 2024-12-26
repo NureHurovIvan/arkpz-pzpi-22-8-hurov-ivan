@@ -60,16 +60,6 @@ exports.getSystemStats = async (req, res) => {
   }
 };
 
-// User vehicle management
-exports.getUserVehicles = async (req, res) => {
-  try {
-    const vehicles = await Vehicle.find({ user_id: req.user.user_id });
-    res.json(vehicles);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching vehicles', error: error.message });
-  }
-};
-
 // Registration
 exports.registerUser = async (req, res) => {
   const { name, email, password, role } = req.body;

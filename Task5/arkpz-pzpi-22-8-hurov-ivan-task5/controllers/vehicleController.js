@@ -50,3 +50,13 @@ exports.getAllVehicles = async (req, res) => {
     res.status(500).json({ message: 'Error fetching vehicles', error });
   }
 };
+
+// User vehicle management
+exports.getUserVehicles = async (req, res) => {
+  try {
+    const vehicles = await Vehicle.find({ user_id: req.user.user_id });
+    res.json(vehicles);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching vehicles', error: error.message });
+  }
+};
