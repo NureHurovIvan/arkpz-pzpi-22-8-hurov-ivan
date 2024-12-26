@@ -1,1 +1,129 @@
+Міністерство освіти і науки України
+Харківський національний університет радіоелектроніки
+
+
+Кафедра програмної інженерії
+
+
+
+
+
+
+Звіт
+З лабораторної роботи №5
+З дисципліни «Аналіз та рефакторинг коду»
+на тему: «РОЗГОРТАННЯ ПРОГРАМНОЇ СИСТЕМИ ТА ДЕМОНСТРАЦІЯ ЇЇ РОБОТИ»
+
+
+
+
+
+
+
+
+Виконав
+ст. гр. ПЗПІ-22-8
+Гуров Іван	Перевірив ст. викладач каф. ПІ
+Сокорчук І. П.
+
+
+	
+
+
+Харків 2024
+1.	Мета роботи:
+
+Розгорнути реалізовану програмну систему, перевірити та налаштувати роботу розгорнутої програмної системи.
+
+2.	Хід роботи:
+
+2.1 Опис розгорнутої програмної системи
+
+Розроблена програмна система призначена для моніторингу стану автомобіля через IoT пристрої. Система збирає дані про тиск у шинах, напругу акумулятора та товщину гальмівних колодок в реальному часі. Система складається з наступних компонентів:
+1.	IoT пристрій на базі ESP32
+2.	Серверна частина на Node.js
+3.	База даних MongoDB
+4.	API для взаємодії з системою
+5.	MQTT брокер для комунікації між IoT пристроєм та сервером
+
+2.2 Опис розгортання
+
+Серверна частина:
+Сервер побудований на Node.js з використанням Express.js фреймворку. Основні компоненти:
+1. Підключення та конфігурація сервера:
+1  const express = require('express');
+2  const dotenv = require('dotenv');
+3  const connectDB = require('./config/database');
+4  const swaggerDocs = require('./config/swagger');
+5  const mqtt = require('mqtt');
+6  
+7  dotenv.config();
+8  connectDB();
+9  
+10 const app = express();
+11 app.use(express.json());
+
+База даних:
+Використовується MongoDB з Mongoose для роботи з даними. Основні моделі:
+1  const mongoose = require('mongoose');
+2  
+3  const vehicleSchema = new mongoose.Schema({
+4    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+5    make: { type: String, required: true },
+6    model: { type: String, required: true },
+7    year: { type: Number, required: true },
+8    vin_number: { type: String, required: true },
+9    tirePressure: { type: Number, default: null },
+10   batteryVoltage: { type: Number, default: null },
+11   brakePadThickness: { type: Number, default: null }
+12 });
+
+API:
+REST API з документацією Swagger. Основні ендпоінти:
+- /api/register - реєстрація користувача
+- /api/login - авторизація
+- /api/vehicles - управління автомобілями
+- /api/maintenance - записи про обслуговування
+
+Інтеграція IoT:
+IoT пристрій на базі ESP32 з підключенням через MQTT:
+1  #include <WiFi.h>
+2  #include <PubSubClient.h>
+3  
+4  const char* ssid = "Wokwi-GUEST";
+5  const char* password = "";
+6  const char* mqtt_server = "broker.hivemq.com";
+7  const int mqtt_port = 1883;
+8  
+9  void loop() {
+10   float tirePressure = 30.5;
+11   float batteryVoltage = 12.2;
+12   float brakePadThickness = 8.0;
+13 
+14   String payload = String("{") +
+15                    "\"vin\":\"" + vin + "\"," +
+16                    "\"tirePressure\":" + String(tirePressure) + "," +
+17                    "\"batteryVoltage\":" + String(batteryVoltage) + "," +
+18                    "\"brakePadThickness\":" + String(brakePadThickness) +
+19                    "}";
+20 
+21   client.publish(topic, payload.c_str());
+22 }
+
+Використані інструменти та технології:
+•	Visual Studio Code: середовище розробки
+•	Node.js: серверна платформа
+•	MongoDB: база даних
+•	Express.js: веб-фреймворк
+•	Mongoose: ODM для MongoDB
+•	MQTT: протокол для IoT комунікації
+•	Swagger: документація API
+•	ESP32: IoT платформа
+•	JWT: автентифікація користувачів
+
+3.	Висновок:
+
+В ході виконання лабораторної роботи було успішно розгорнуто та налаштовано програмну систему моніторингу стану автомобіля. Система демонструє стабільну роботу всіх компонентів: збір даних з IoT пристрою, їх обробку на сервері та збереження в базі даних. API система надає зручний інтерфейс для взаємодії з даними, а Swagger документація полегшує інтеграцію нових клієнтів.
+
+Посилання на відео: https://youtu.be/-FhM53yKuLw
 
